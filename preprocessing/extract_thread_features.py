@@ -7,6 +7,7 @@ import numpy as np
 
 import nltk
 import re
+import unicodedata
 # import help_prep_functions
 from tree2branches import tree2branches
 
@@ -236,6 +237,12 @@ from tree2branches import tree2branches
 
 #   return feature_dict
 
+def clean_tokens_from_text(s):
+  s = s.decode('utf-8')
+  s = unicodedata.normalize('NFKD', s)
+  s = s.encode('ASCII', 'ignore').lower()
+  return nltk.word_tokenize(s)
+
 
 def extract_thread_features_incl_response(conversation):
   # source_features = extract_thread_features(conversation)
@@ -243,9 +250,10 @@ def extract_thread_features_incl_response(conversation):
   source_features['issource'] = 1
   source_features['Word2VecSimilarityWrtSource'] = 0
   source_features['Word2VecSimilarityWrtPrev'] = 0
-  srctokens = nltk.word_tokenize(re.sub(
-                                 r'([^\s\w]|_)+', '',
-                                 conversation['source']['text'].lower()))
+  # srctokens = nltk.word_tokenize(re.sub(
+  #                                r'([^\s\w]|_)+', '',
+  #                                conversation['source']['text'].lower()))
+  srctokens = clean_tokens_from_text(conversation['source']['text'])
   source_features['text'] = srctokens
   fullthread_featdict = {}
   fullthread_featdict[conversation['source']['id_str']] = source_features
@@ -253,39 +261,40 @@ def extract_thread_features_incl_response(conversation):
   for tw in conversation['replies']:
     feature_dict = {}
     feature_dict['issource'] = 0
-    tokens = nltk.word_tokenize(re.sub(r'([^\s\w]|_)+', '',
-                                       tw['text'].lower()))
-    otherthreadtweets = ''
-    otherthreadtweets += conversation['source']['text']
+    # tokens = nltk.word_tokenize(re.sub(r'([^\s\w]|_)+', '',
+    #                                    tw['text'].lower()))
+    # otherthreadtweets = ''
+    # otherthreadtweets += conversation['source']['text']
 
-    for response in conversation['replies']:
-      otherthreadtweets += ' ' + response['text']
+    # for response in conversation['replies']:
+    #   otherthreadtweets += ' ' + response['text']
 
-    otherthreadtokens = nltk.word_tokenize(re.sub(
-                                           r'([^\s\w]|_)+', '',
-                                           otherthreadtweets.lower()))
-    branches = tree2branches(conversation['structure'])
-    for branch in branches:
-      if tw['id_str'] in branch:
-        if branch.index(tw['id_str'])-1 == 0:
-          prevtokens = srctokens
-        else:
-          prev_id = branch[branch.index(tw['id_str'])-1]
-          for ptw in conversation['replies']:
-            if ptw['id_str'] == prev_id:
-              prevtokens = nltk.word_tokenize(re.sub(
-                  r'([^\s\w]|_)+',
-                  '',
-                  ptw['text'].lower()))
-              break
-      else:
-        prevtokens = []
-      break
-    raw_txt = tw['text']
+    # otherthreadtokens = nltk.word_tokenize(re.sub(
+    #                                        r'([^\s\w]|_)+', '',
+    #                                        otherthreadtweets.lower()))
+    # branches = tree2branches(conversation['structure'])
+    # for branch in branches:
+    #   if tw['id_str'] in branch:
+    #     if branch.index(tw['id_str'])-1 == 0:
+    #       prevtokens = srctokens
+    #     else:
+    #       prev_id = branch[branch.index(tw['id_str'])-1]
+    #       for ptw in conversation['replies']:
+    #         if ptw['id_str'] == prev_id:
+    #           prevtokens = nltk.word_tokenize(re.sub(
+    #               r'([^\s\w]|_)+',
+    #               '',
+    #               ptw['text'].lower()))
+    #           break
+    #   else:
+    #     prevtokens = []
+    #   break
+    # raw_txt = tw['text']
 
-    str_text = re.sub("[^a-zA-Z]", " ", tw['text'])
-    words = nltk.word_tokenize(str_text.lower())
-    feature_dict['text'] = words
+    # str_text = re.sub("[^a-zA-Z]", " ", tw['text'])
+    # words = nltk.word_tokenize(str_text.lower())
+    tokens = clean_tokens_from_text(tw['text'])
+    feature_dict['text'] = tokens
 
     # feature_dict['hasqmark'] = 0
     # if tw['text'].find('?') >= 0:
