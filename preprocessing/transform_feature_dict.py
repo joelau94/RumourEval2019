@@ -32,26 +32,33 @@ def transform_feature_dict(thread_feature_dict, conversation, feature_set):
         branch_stance_lab = []
         for twid in branch:
             if twid in thread_feature_dict.keys():
-                tweet_rep = dict_to_array(thread_feature_dict[twid],
-                                          feature_set)
+                # tweet_rep = dict_to_array(thread_feature_dict[twid],
+                #                           feature_set)
+                tweet_rep = thread_feature_dict[twid]['text']
+
                 branch_rep.append(tweet_rep)
 
                 if twid == branch[0]:
                     if 'label' in list(conversation['source'].keys()):
-                        branch_stance_lab.append(convert_label(
-                                            conversation['source']['label']))
+                        # branch_stance_lab.append(convert_label(
+                        #                     conversation['source']['label']))
+                        branch_stance_lab.append(conversation['source']['label'])
+
                     clb.append(twid)
                 else:
                     for r in conversation['replies']:
                         if r['id_str'] == twid:
                             if 'label' in list(r.keys()):
 
-                                branch_stance_lab.append(
-                                                    convert_label(r['label']))
+                                # branch_stance_lab.append(
+                                #                     convert_label(r['label']))
+                                branch_stance_lab.append(r['label'])
+
+
                             clb.append(twid)
         if branch_rep != []:
-            branch_rep = np.asarray(branch_rep)
-            branch_stance_lab = np.asarray(branch_stance_lab)
+            # branch_rep = np.asarray(branch_rep)
+            # branch_stance_lab = np.asarray(branch_stance_lab)
             thread_features_array.append(branch_rep)
             thread_stance_labels.append(branch_stance_lab)
             clean_branches.append(clb)
