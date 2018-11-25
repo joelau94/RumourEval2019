@@ -238,7 +238,8 @@ from tree2branches import tree2branches
 
 
 def extract_thread_features_incl_response(conversation):
-  source_features = extract_thread_features(conversation)
+  # source_features = extract_thread_features(conversation)
+  source_features = {}
   source_features['issource'] = 1
   source_features['Word2VecSimilarityWrtSource'] = 0
   source_features['Word2VecSimilarityWrtPrev'] = 0
