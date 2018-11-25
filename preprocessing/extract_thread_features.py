@@ -246,6 +246,7 @@ def extract_thread_features_incl_response(conversation):
   srctokens = nltk.word_tokenize(re.sub(
                                  r'([^\s\w]|_)+', '',
                                  conversation['source']['text'].lower()))
+  source_features['text'] = srctokens
   fullthread_featdict = {}
   fullthread_featdict[conversation['source']['id_str']] = source_features
 
