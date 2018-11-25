@@ -240,6 +240,8 @@ from tree2branches import tree2branches
 def clean_tokens_from_text(s):
   # remove mentions with @username
   s = re.sub(r'@[^\s]+', '', s)
+  # remove http hyperlinks
+  s = re.sub(r'http[^\s]+', '', s)
   # normalize non-unicode and lowercase them
   s = s.encode('utf-8').decode('utf-8')
   s = unicodedata.normalize('NFKD', s)
