@@ -74,24 +74,24 @@ def prep_pipeline(dataset='RumEval2019', feature_set=['avgw2v']):
       fold_stance_labels.append(thread_stance_labels)
       # tweet_ids.extend(branches)
       tweet_ids.append(branches)
-      # feature_fold.extend(thread_features_array)
+      feature_fold.append(thread_text)
       for i in range(len(thread_text)):
         # labels.append(convert_label(conversation['veracity']))
         labels.append(conversation['veracity'])
         ids.append(conversation['id'])
 
-      # result: thread_text (nested),
+      # result: feature_fold (nested thread_text),
       #         fold_stance_labels (nested),
       #         labels (veracity)
 
       datafile = os.path.join(DATA_PATH, fold + '.txt')
-      assert len(thread_text) == len(fold_stance_labels)
-      assert len(thread_text) == len(labels)
+      assert len(feature_fold) == len(fold_stance_labels)
+      assert len(feature_fold) == len(labels)
       fdata = open(datafile, 'w')
-      for thread, stance, veracity in zip(thread_text,
+      for thread, stance, veracity in zip(feature_fold,
                                           fold_stance_labels,
                                           labels):
-        orig_tweet = ' '.join(thread_text[0])
+        orig_tweet = ' '.join(thread[0])
         fdata.write('{} ||| {} ||| {}\n'.format(orig_tweet, stance[0], veracity))
         for thr, sdqc in zip(thread[1:], stance[1:]):
           tweet = ' '.join(thr)
