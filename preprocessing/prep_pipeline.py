@@ -75,10 +75,10 @@ def prep_pipeline(dataset='RumEval2019', feature_set=['avgw2v']):
       # tweet_ids.extend(branches)
       tweet_ids.append(branches)
       feature_fold.append(thread_text)
-      for i in range(len(thread_text)):
-        # labels.append(convert_label(conversation['veracity']))
-        labels.append(conversation['veracity'])
-        ids.append(conversation['id'])
+      labels.append(conversation['veracity'])
+      # for i in range(len(thread_text)):
+      #   labels.append(convert_label(conversation['veracity']))
+      #   ids.append(conversation['id'])
 
     # result: feature_fold (nested thread_text),
     #         fold_stance_labels (nested),
