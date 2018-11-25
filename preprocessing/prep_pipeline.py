@@ -78,23 +78,23 @@ def prep_pipeline(dataset='RumEval2019', feature_set=['avgw2v']):
         labels.append(conversation['veracity'])
         ids.append(conversation['id'])
 
-    # result: thread_text (nested),
-    #         fold_stance_labels (nested),
-    #         labels (veracity)
+      # result: thread_text (nested),
+      #         fold_stance_labels (nested),
+      #         labels (veracity)
 
-    datafile = os.path.join(DATA_PATH, fold + '.txt')
-    assert len(thread_text) == len(fold_stance_labels)
-    assert len(thread_text) == len(labels)
-    fdata = open(datafile, 'w')
-    for thread, stance, veracity in zip(thread_text,
-                                        fold_stance_labels,
-                                        labels):
-      orig_tweet = ' '.join(thread_text[0])
-      fdata.write('{} ||| {} ||| {}\n'.format(orig_tweet, stance[0], veracity))
-      for thr, sdqc in zip(thread[1:], stance[1:]):
-        tweet = ' '.join(thr)
-        fdata.write('{} ||| {}\n'.format(tweet, sdqc))
-      fdata.write('\n')
+      datafile = os.path.join(DATA_PATH, fold + '.txt')
+      assert len(thread_text) == len(fold_stance_labels)
+      assert len(thread_text) == len(labels)
+      fdata = open(datafile, 'w')
+      for thread, stance, veracity in zip(thread_text,
+                                          fold_stance_labels,
+                                          labels):
+        orig_tweet = ' '.join(thread_text[0])
+        fdata.write('{} ||| {} ||| {}\n'.format(orig_tweet, stance[0], veracity))
+        for thr, sdqc in zip(thread[1:], stance[1:]):
+          tweet = ' '.join(thr)
+          fdata.write('{} ||| {}\n'.format(tweet, sdqc))
+        fdata.write('\n')
 
 #%
       # if feature_fold!=[]:
