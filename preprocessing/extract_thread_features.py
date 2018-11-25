@@ -238,9 +238,13 @@ from tree2branches import tree2branches
 #   return feature_dict
 
 def clean_tokens_from_text(s):
-  s = s.decode('utf-8')
+  # remove mentions with @username
+  s = re.sub(r'@[^\s]+', '', s)
+  # normalize non-unicode and lowercase them
+  s = s.encode('utf-8').decode('utf-8')
   s = unicodedata.normalize('NFKD', s)
   s = s.encode('ASCII', 'ignore').lower()
+  # tokenize
   return nltk.word_tokenize(s)
 
 
