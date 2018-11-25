@@ -247,7 +247,10 @@ def clean_tokens_from_text(s):
   s = unicodedata.normalize('NFKD', s)
   s = s.encode('ASCII', 'ignore').lower()
   # tokenize
-  return nltk.word_tokenize(s)
+  tokens = nltk.word_tokenize(s)
+  if len(tokens) == 0:
+    tokens.append('.')
+  return tokens
 
 
 def extract_thread_features_incl_response(conversation):
