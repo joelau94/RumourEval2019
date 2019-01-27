@@ -7,28 +7,31 @@ import os
 import json
 from tree2branches import tree2branches
 
+from collections import defaultdict
+
 #%%
 
 
 def load_true_labels():
 
-  tweet_label_dict = {}
-  veracity_label_dict = {}
-  path_dev = "../rumoureval-2019-training-data/dev-key.json"
-  with open(path_dev, 'r') as f:
-    dev_key = json.load(f)
+  # tweet_label_dict = {}
+  # veracity_label_dict = {}
+  # path_dev = "../rumoureval-2019-training-data/dev-key.json"
+  # with open(path_dev, 'r') as f:
+  #   dev_key = json.load(f)
 
-  path_train = "../rumoureval-2019-training-data/train-key.json"
-  with open(path_train, 'r') as f:
-    train_key = json.load(f)
+  # path_train = "../rumoureval-2019-training-data/train-key.json"
+  # with open(path_train, 'r') as f:
+  #   train_key = json.load(f)
 
-  tweet_label_dict['dev'] = dev_key['subtaskaenglish']
-  tweet_label_dict['train'] = train_key['subtaskaenglish']
+  # tweet_label_dict['dev'] = dev_key['subtaskaenglish']
+  # tweet_label_dict['train'] = train_key['subtaskaenglish']
 
-  veracity_label_dict['dev'] = dev_key['subtaskbenglish']
-  veracity_label_dict['train'] = train_key['subtaskbenglish']
+  # veracity_label_dict['dev'] = dev_key['subtaskbenglish']
+  # veracity_label_dict['train'] = train_key['subtaskbenglish']
 
-  return tweet_label_dict, veracity_label_dict
+  # return tweet_label_dict, veracity_label_dict
+  return defaultdict(lambda:'placeholder'), defaultdict(lambda:'placeholder')
 
 #%%
 
@@ -42,7 +45,7 @@ def load_dataset():
   dev_tweets = dev.keys()
   train_tweets = train.keys()
   # Load folds and conversations
-  path_to_folds = '../rumoureval-2019-training-data/twitter-english'
+  path_to_folds = '../rumoureval-2019-training-data/twitter-en-test-data'
   folds = sorted(os.listdir(path_to_folds))
   newfolds = [i for i in folds if i[0] != '.']
   folds = newfolds
@@ -131,7 +134,8 @@ def load_dataset():
 
         branches = tree2branches(conversation['structure'])
         conversation['branches'] = branches
-        train_dev_split[flag].append(conversation.copy())
+        # train_dev_split[flag].append(conversation.copy())
+        train_dev_split['test'].append(conversation.copy())
         allconv.append(conversation.copy())
       else:
         flag = 'train'
@@ -164,7 +168,8 @@ def load_dataset():
         branches = tree2branches(conversation['structure'])
 
         conversation['branches'] = branches
-        train_dev_split[flag].append(conversation.copy())
+        # train_dev_split[flag].append(conversation.copy())
+        train_dev_split['test'].append(conversation.copy())
         allconv.append(conversation.copy())
 
         print(foldr)
