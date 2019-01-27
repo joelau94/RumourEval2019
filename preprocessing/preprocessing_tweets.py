@@ -31,7 +31,10 @@ def load_true_labels():
   # veracity_label_dict['train'] = train_key['subtaskbenglish']
 
   # return tweet_label_dict, veracity_label_dict
-  return defaultdict(lambda:'placeholder'), defaultdict(lambda:'placeholder')
+  return {'dev': defaultdict(lambda: 'placeholder'),
+          'train': defaultdict(lambda: 'placeholder')}, \
+      {'dev': defaultdict(lambda: 'placeholder'),
+          'train': defaultdict(lambda: 'placeholder')}
 
 #%%
 
@@ -45,7 +48,8 @@ def load_dataset():
   dev_tweets = dev.keys()
   train_tweets = train.keys()
   # Load folds and conversations
-  path_to_folds = '../rumoureval-2019-training-data/twitter-en-test-data'
+  path_to_folds = ('../rumoureval-2019-test-data'
+                   '/twitter-en-test-data')
   folds = sorted(os.listdir(path_to_folds))
   newfolds = [i for i in folds if i[0] != '.']
   folds = newfolds
@@ -76,22 +80,24 @@ def load_dataset():
               tw = json.loads(line)
               tw['used'] = 0
               replyid = tw['id_str']
-              if replyid in dev_tweets:
-                tw['set'] = 'dev'
-                tw['label'] = dev[replyid]
-    #                        train_dev_tweets['dev'].append(tw)
-                if flag == 'train':
-                  print("The tree is split between sets", foldr)
-                flag = 'dev'
-              elif replyid in train_tweets:
-                tw['set'] = 'train'
-                tw['label'] = train[replyid]
-    #                        train_dev_tweets['train'].append(tw)
-                if flag == 'dev':
-                  print("The tree is split between sets", foldr)
-                flag = 'train'
-              else:
-                print("Tweet was not found! ID: ", foldr)
+              tw['label'] = 'placeholder'
+              tw['set'] = 'test'
+    #           if replyid in dev_tweets:
+    #             tw['set'] = 'dev'
+    #             tw['label'] = dev[replyid]
+    # #                        train_dev_tweets['dev'].append(tw)
+    #             if flag == 'train':
+    #               print("The tree is split between sets", foldr)
+    #             flag = 'dev'
+    #           elif replyid in train_tweets:
+    #             tw['set'] = 'train'
+    #             tw['label'] = train[replyid]
+    # #                        train_dev_tweets['train'].append(tw)
+    #             if flag == 'dev':
+    #               print("The tree is split between sets", foldr)
+    #             flag = 'train'
+    #           else:
+    #             print("Tweet was not found! ID: ", foldr)
               tweets.append(tw)
               if tw['text'] is None:
                 print("Tweet has no text", tw['id'])
@@ -105,10 +111,10 @@ def load_dataset():
             src['used'] = 0
             scrcid = src['id_str']
             src['set'] = flag
-            src['label'] = tweet_label_dict[flag][scrcid]
+            src['label'] = 'placeholder'
 
         conversation['source'] = src
-        conversation['veracity'] = veracity_label_dict[flag][scrcid]
+        conversation['veracity'] = 'placeholder'
         if src['text'] is None:
           print("Tweet has no text", src['id'])
         path_struct = path_to_tweets+'/'+foldr+'/structure.json'
@@ -147,10 +153,10 @@ def load_dataset():
             src['used'] = 0
             scrcid = src['id_str']
             src['set'] = flag
-            src['label'] = tweet_label_dict[flag][scrcid]
+            src['label'] = 'placeholder'
 
         conversation['source'] = src
-        conversation['veracity'] = veracity_label_dict[flag][scrcid]
+        conversation['veracity'] = 'placeholder'
         if src['text'] is None:
           print("Tweet has no text", src['id'])
 

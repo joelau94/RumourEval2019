@@ -9,6 +9,8 @@ import json
 from copy import deepcopy
 import numpy as np
 from tree2branches import tree2branches
+
+from collections import defaultdict
 #%%
 
 
@@ -35,7 +37,7 @@ def load_data():
 
   #%%
 
-  path = "../rumoureval-2019-training-data/reddit-test-data"
+  path = "../rumoureval-2019-test-data/reddit-test-data"
 
   conversation_ids = listdir_nohidden(path)
   conversations = {}
@@ -64,28 +66,34 @@ def load_data():
 
         src['used'] = 0
 
-        if src['id_str'] in list(dev_key['subtaskaenglish'].keys()):
-          src['setA'] = 'dev'
-          src['label'] = dev_key['subtaskaenglish'][src['id_str']]
+        # if src['id_str'] in list(dev_key['subtaskaenglish'].keys()):
+        #   src['setA'] = 'dev'
+        #   src['label'] = dev_key['subtaskaenglish'][src['id_str']]
 
-        elif src['id_str'] in list(train_key['subtaskaenglish'].keys()):
-          src['setA'] = 'train'
-          src['label'] = train_key['subtaskaenglish'][src['id_str']]
+        # elif src['id_str'] in list(train_key['subtaskaenglish'].keys()):
+        #   src['setA'] = 'train'
+        #   src['label'] = train_key['subtaskaenglish'][src['id_str']]
 
-        else:
+        # else:
 
-          print("Post was not found! Task A, Post ID: ", src['id_str'])
+        #   print("Post was not found! Task A, Post ID: ", src['id_str'])
 
-        if src['id_str'] in list(dev_key['subtaskbenglish'].keys()):
-          src['setB'] = 'dev'
-          conversation['veracity'] = dev_key['subtaskbenglish'][src['id_str']]
+        src['setA'] = 'test'
+        src['label'] = 'placeholder'
 
-        elif src['id_str'] in list(train_key['subtaskbenglish'].keys()):
-          src['setB'] = 'train'
-          conversation['veracity'] = train_key['subtaskbenglish'][src['id_str']]
+        # if src['id_str'] in list(dev_key['subtaskbenglish'].keys()):
+        #   src['setB'] = 'dev'
+        #   conversation['veracity'] = dev_key['subtaskbenglish'][src['id_str']]
 
-        else:
-          print("Post was not found! Task B, Post ID: ", src['id_str'])
+        # elif src['id_str'] in list(train_key['subtaskbenglish'].keys()):
+        #   src['setB'] = 'train'
+        #   conversation['veracity'] = train_key['subtaskbenglish'][src['id_str']]
+
+        # else:
+        #   print("Post was not found! Task B, Post ID: ", src['id_str'])
+
+        src['setB'] = 'test'
+        conversation['veracity'] = 'placeholder'
 
         conversation['source'] = src
 
@@ -97,48 +105,52 @@ def load_data():
         for line in f:
           tw = json.loads(line)
 
-          if 'body' in list(tw['data'].keys()):
+          # if 'body' in list(tw['data'].keys()):
 
-            tw['text'] = tw['data']['body']
-            tw['user'] = tw['data']['author']
+          #   tw['text'] = tw['data']['body']
+          #   tw['user'] = tw['data']['author']
 
-            if repl_file.endswith('.json'):
-              filename = repl_file[:-5]
-              tw['id_str'] = filename
-            else:
-              print("No, no I don't like that reply")
+          #   if repl_file.endswith('.json'):
+          #     filename = repl_file[:-5]
+          #     tw['id_str'] = filename
+          #   else:
+          #     print("No, no I don't like that reply")
 
-            tw['used'] = 0
-            if tw['id_str'] in list(dev_key['subtaskaenglish'].keys()):
-              tw['setA'] = 'dev'
-              tw['label'] = dev_key['subtaskaenglish'][tw['id_str']]
-            elif tw['id_str'] in list(train_key['subtaskaenglish'].keys()):
-              tw['setA'] = 'train'
-              tw['label'] = train_key['subtaskaenglish'][tw['id_str']]
-            else:
-              print("Post was not found! Task A, Reply ID: ", tw['id_str'])
+          #   tw['used'] = 0
+          #   # if tw['id_str'] in list(dev_key['subtaskaenglish'].keys()):
+          #   #   tw['setA'] = 'dev'
+          #   #   tw['label'] = dev_key['subtaskaenglish'][tw['id_str']]
+          #   # elif tw['id_str'] in list(train_key['subtaskaenglish'].keys()):
+          #   #   tw['setA'] = 'train'
+          #   #   tw['label'] = train_key['subtaskaenglish'][tw['id_str']]
+          #   # else:
+          #   #   print("Post was not found! Task A, Reply ID: ", tw['id_str'])
 
-            tweets.append(tw)
+
+          #   tweets.append(tw)
+          # else:
+
+          tw['text'] = ''
+          tw['user'] = ''
+          tw['used'] = 0
+          if repl_file.endswith('.json'):
+            filename = repl_file[:-5]
+            tw['id_str'] = filename
           else:
+            print("No, no I don't like that reply")
+          # if tw['id_str'] in list(dev_key['subtaskaenglish'].keys()):
+          #   tw['setA'] = 'dev'
 
-            tw['text'] = ''
-            tw['user'] = ''
-            tw['used'] = 0
-            if repl_file.endswith('.json'):
-              filename = repl_file[:-5]
-              tw['id_str'] = filename
-            else:
-              print("No, no I don't like that reply")
-            if tw['id_str'] in list(dev_key['subtaskaenglish'].keys()):
-              tw['setA'] = 'dev'
+          #   tw['label'] = dev_key['subtaskaenglish'][tw['id_str']]
+          # elif tw['id_str'] in list(train_key['subtaskaenglish'].keys()):
+          #   tw['setA'] = 'train'
+          #   tw['label'] = train_key['subtaskaenglish'][tw['id_str']]
+          # else:
+          #   print("Post was not found! Task A, Reply ID: ", tw['id_str'])
 
-              tw['label'] = dev_key['subtaskaenglish'][tw['id_str']]
-            elif tw['id_str'] in list(train_key['subtaskaenglish'].keys()):
-              tw['setA'] = 'train'
-              tw['label'] = train_key['subtaskaenglish'][tw['id_str']]
-            else:
-              print("Post was not found! Task A, Reply ID: ", tw['id_str'])
-            tweets.append(tw)
+          tw['setA'] = 'test'
+          tw['label'] = 'placeholder'
+          tweets.append(tw)
 
     conversation['replies'] = tweets
     path_struct = path+'/'+id+'/structure.json'
