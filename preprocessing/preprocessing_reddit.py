@@ -79,7 +79,7 @@ def load_data():
         #   print("Post was not found! Task A, Post ID: ", src['id_str'])
 
         src['setA'] = 'test'
-        src['label'] = 'placeholder'
+        src['label'] = 'comment'
 
         # if src['id_str'] in list(dev_key['subtaskbenglish'].keys()):
         #   src['setB'] = 'dev'
@@ -93,7 +93,7 @@ def load_data():
         #   print("Post was not found! Task B, Post ID: ", src['id_str'])
 
         src['setB'] = 'test'
-        conversation['veracity'] = 'placeholder'
+        conversation['veracity'] = 'true'
 
         conversation['source'] = src
 
@@ -149,7 +149,7 @@ def load_data():
           #   print("Post was not found! Task A, Reply ID: ", tw['id_str'])
 
           tw['setA'] = 'test'
-          tw['label'] = 'placeholder'
+          tw['label'] = 'comment'
           tweets.append(tw)
 
     conversation['replies'] = tweets

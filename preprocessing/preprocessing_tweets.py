@@ -80,7 +80,7 @@ def load_dataset():
               tw = json.loads(line)
               tw['used'] = 0
               replyid = tw['id_str']
-              tw['label'] = 'placeholder'
+              tw['label'] = 'comment'
               tw['set'] = 'test'
     #           if replyid in dev_tweets:
     #             tw['set'] = 'dev'
@@ -111,10 +111,10 @@ def load_dataset():
             src['used'] = 0
             scrcid = src['id_str']
             src['set'] = flag
-            src['label'] = 'placeholder'
+            src['label'] = 'comment'
 
         conversation['source'] = src
-        conversation['veracity'] = 'placeholder'
+        conversation['veracity'] = 'true'
         if src['text'] is None:
           print("Tweet has no text", src['id'])
         path_struct = path_to_tweets+'/'+foldr+'/structure.json'
@@ -153,10 +153,10 @@ def load_dataset():
             src['used'] = 0
             scrcid = src['id_str']
             src['set'] = flag
-            src['label'] = 'placeholder'
+            src['label'] = 'comment'
 
         conversation['source'] = src
-        conversation['veracity'] = 'placeholder'
+        conversation['veracity'] = 'true'
         if src['text'] is None:
           print("Tweet has no text", src['id'])
 
